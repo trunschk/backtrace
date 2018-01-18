@@ -1,7 +1,10 @@
 backtrace
 =========
 
-WIP! Untested!
+Work in progress.
+
+This is a fork of [nir0s/backtrace](https://github.com/nir0s/backtrace).
+
 
 
 [![Travis Build Status](https://travis-ci.org/nir0s/backtrace.svg?branch=master)](https://travis-ci.org/nir0s/backtrace)
@@ -22,11 +25,11 @@ Examples:
 
 When piping to backtrace:
 
-![Trump? REALLY?! What a nation of idiots!](https://github.com/nir0s/backtrace/raw/master/img/piping.png)
+![Piping into backtrace](https://github.com/nir0s/backtrace/raw/master/img/piping.png)
 
 When using the API directly from Python:
 
-![Trump? REALLY?! What a nation of idiots!](https://github.com/nir0s/backtrace/raw/master/img/api.png)
+![Using python API](https://github.com/nir0s/backtrace/raw/master/img/api.png)
 
 NOTE: Didn't test this on Windows yet. Should work.. but don't know how well.
 
@@ -170,9 +173,3 @@ cd backtrace
 pip install tox
 tox
 ```
-
-## Contributions..
-
-See [CONTRIBUTIONS](https://github.com/nir0s/backtrace/blob/master/CONTRIBUTING.md)
-
-Pull requests are always welcome..
