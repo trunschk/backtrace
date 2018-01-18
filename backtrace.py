@@ -1,3 +1,8 @@
+"""Beautify Tracebacks.
+
+Just pipe stderr into backtrace like so:
+  `python bad-program.py 2>&1 | backtrace`
+"""
 import os
 import sys
 import argparse
@@ -7,12 +12,6 @@ import colorama
 from colorama import Fore, Style
 
 
-DESCRIPTION = """Beautify Tracebacks.
-
-Just pipe stderr into backtrace like so:
-  `python bad-program.py 2>&1 | backtrace`
-"""
-
 TRACEBACK_IDENTIFIER = 'Traceback (most recent call last):\n'
 STYLES = {
     'backtrace': Fore.YELLOW + '{0}',
@@ -20,7 +19,7 @@ STYLES = {
     'line': Fore.RED + Style.BRIGHT + '{0}',
     'module': '{0}',
     'context': Style.BRIGHT + Fore.GREEN + '{0}',
-    'call': Fore.YELLOW + '--> ' + Style.BRIGHT + '{0}',
+    'call': Fore.YELLOW + ': ' + Style.BRIGHT + '{0}',
 }
 
 CONVERVATIVE_STYLES = {
@@ -184,10 +183,7 @@ def hook(reverse=False,
         sys.excepthook = backtrace_excepthook
 
 
-def unhook():
-    """Restore the default excepthook
-    """
-    sys.excepthook = sys.__excepthook__
+def unhook(): sys.excepthook = sys.__excepthook__
 
 
 def _extract_traceback(text):
@@ -241,14 +237,17 @@ def _extract_traceback(text):
 
     traceback_entries = []
 
+    # print(entries[:-2])
     # Build the traceback structure later passed for formatting.
     for index, line in enumerate(entries[:-2]):
         # TODO: This should be done in a _parse_entry function
+        # print(index, line)
         element = line.split(',')
         element[0] = element[0].strip().lstrip('File').strip(' "')
         element[1] = element[1].strip().lstrip('line').strip()
         element[2] = element[2].strip().lstrip('in').strip()
         traceback_entries.append(tuple(element))
+    # print(traceback_entries)
     return traceback_entries, all_else
 
 
@@ -256,77 +255,33 @@ def _stdin_hook(args):
     output = sys.stdin.readlines()
 
     if TRACEBACK_IDENTIFIER not in output:
-        sys.exit(
-            'No Traceback detected. Make sure you pipe stderr to '
-            'backtrace correctly.')
+        sys.exit('No Traceback detected. Make sure you pipe stderr to '
+                 'backtrace correctly.')
 
     tb, all_else = _extract_traceback(output)
     sys.stdout.write(''.join(all_else))
     tpe, value = output[-1].strip('\n').split(': ', 1)
-    hook(
-        reverse=args.reverse,
-        align=args.align,
-        strip_path=args.strip_path,
-        conservative=args.conservative,
-        tpe=tpe,
-        value=value,
-        tb=tb
-    )
-
-
-def _add_reverse_argument(parser):
-    parser.add_argument(
-        '-r',
-        '--reverse',
-        action='store_true',
-        help='Reverse traceback entry order')
-    return parser
-
-
-def _add_align_argument(parser):
-    parser.add_argument(
-        '-a',
-        '--align',
-        action='store_true',
-        help='Right-align the backtrace')
-    return parser
-
-
-def _add_strip_path_argument(parser):
-    parser.add_argument(
-        '-s',
-        '--strip-path',
-        action='store_true',
-        help='Strip the path to the module')
-    return parser
-
-
-def _add_conservative_argument(parser):
-    parser.add_argument(
-        '-c',
-        '--conservative',
-        action='store_true',
-        help='Activate conservative mode')
-    return parser
-
-
-def parse_args():
-    parser = argparse.ArgumentParser(
-        description=DESCRIPTION,
-        formatter_class=argparse.RawTextHelpFormatter)
-    parser = _add_reverse_argument(parser)
-    parser = _add_align_argument(parser)
-    parser = _add_strip_path_argument(parser)
-    parser = _add_conservative_argument(parser)
-    parser.set_defaults(func=_stdin_hook)
-
-    return parser.parse_args()
+    hook(reverse=args.reverse,
+         align=args.align,
+         strip_path=args.strip_path,
+         conservative=args.conservative,
+         tpe=tpe,
+         value=value,
+         tb=tb)
 
 
 def main():
-    args = parse_args()
-    args.func(args)
+    parser = argparse.ArgumentParser(description=__doc__,
+                                     formatter_class=argparse.RawTextHelpFormatter)
+    parser.add_argument('-r', '--reverse', action='store_true', 
+                        help='Reverse traceback entry order')
+    parser.add_argument('-a', '--align', action='store_true',
+                        help='Right-align the backtrace')
+    parser.add_argument('-s', '--strip-path', action='store_true',
+                        help='Strip the path to the module')
+    parser.add_argument('-c', '--conservative', action='store_true',
+                        help='Activate conservative mode')
+    args = parser.parse_args()
+    _stdin_hook(args)
 
-
-if __name__ == '__main__':
-    main()
+if __name__=='__main__': main()
