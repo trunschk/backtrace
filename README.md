@@ -4,6 +4,7 @@ backtrace
 Work in progress.
 
 This is a fork of [nir0s/backtrace](https://github.com/nir0s/backtrace).
+Its aim is to slim down the original.
 
 
 
