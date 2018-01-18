@@ -104,7 +104,7 @@ def hook(reverse=False,
          strip_path=False,
          enable_on_envvar_only=False,
          on_tty=False,
-         styles=None,
+         styles={},
          tb=None,
          tpe=None,
          value=None):
@@ -129,15 +129,11 @@ def hook(reverse=False,
     See https://github.com/nir0s/backtrace/blob/master/README.md for
     information on `styles`.
     """
-    if enable_on_envvar_only and 'ENABLE_BACKTRACE' not in os.environ:
-        return
-
+    if enable_on_envvar_only and 'ENABLE_BACKTRACE' not in os.environ: return
     isatty = getattr(sys.stderr, 'isatty', lambda: False)
-    if on_tty and not isatty():
-        return
+    if on_tty and not isatty(): return
 
-    elif styles: styles.update(STYLES)
-    else: styles = STYLES
+    styles.update(STYLES)
 
     # For Windows
     colorama.init(autoreset=True)
