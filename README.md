@@ -7,15 +7,9 @@ This is a fork of [nir0s/backtrace](https://github.com/nir0s/backtrace).
 Its aim is to slim down the original.
 
 
-
-[![Travis Build Status](https://travis-ci.org/nir0s/backtrace.svg?branch=master)](https://travis-ci.org/nir0s/backtrace)
-[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/khf9a98rbwp1ehfh/branch/master?svg=true)](https://ci.appveyor.com/project/nir0s/backtrace)
-[![PyPI Version](http://img.shields.io/pypi/v/backtrace.svg)](http://img.shields.io/pypi/v/backtrace.svg)
-[![Supported Python Versions](https://img.shields.io/pypi/pyversions/backtrace.svg)](https://img.shields.io/pypi/pyversions/backtrace.svg)
-[![Requirements Status](https://requires.io/github/nir0s/backtrace/requirements.svg?branch=master)](https://requires.io/github/nir0s/backtrace/requirements/?branch=master)
-[![Code Coverage](https://codecov.io/github/nir0s/backtrace/coverage.svg?branch=master)](https://codecov.io/github/nir0s/backtrace?branch=master)
-[![Code Quality](https://landscape.io/github/nir0s/backtrace/master/landscape.svg?style=flat)](https://landscape.io/github/nir0s/backtrace)
-[![Is Wheel](https://img.shields.io/pypi/wheel/backtrace.svg?style=flat)](https://pypi.python.org/pypi/backtrace)
+[![Requirements Status](https://requires.io/github/nir0s/backtrace/requirements.svg?branch=master)](https://requires.io/github/trunschk/backtrace/requirements/?branch=master)
+[![Code Coverage](https://codecov.io/github/nir0s/backtrace/coverage.svg?branch=master)](https://codecov.io/github/trunschk/backtrace?branch=master)
+[![Code Quality](https://landscape.io/github/nir0s/backtrace/master/landscape.svg?style=flat)](https://landscape.io/github/trunschk/backtrace)
 
 backtrace manipulates Python tracebacks to make them more readable.
 It provides different configuration options for coloring and formatting.
