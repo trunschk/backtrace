@@ -24,11 +24,6 @@ backtrace also allows to choose the formatting of each part of the traceback; sh
 NOTE: Didn't test this on Windows yet. Should work.. but don't know how well.
 
 
-## Alternatives
-
-* [colored_traceback](https://github.com/staticshock/colored-traceback.py) provides a way to color your tracebacks to make them more readable. It's a nice little tool but lacks actually re-formatting the traceback which is what the biggest problem is from my POV.
-
-
 ## Installation
 
 backtrace officially supports Linux and OSX on Python 2.7 and 3.4+. Python 2.6 will also probably work, but with no guarantees.
@@ -143,3 +138,8 @@ and the `{0}` format place holder is the actual value of the field.
 Sending a partial dictionary containing changes in only some parts of the traceback will have `backtrace` use the defaults for whatever wasn't specified.
 
 You can do all sorts of stuff like removing a certain field by setting the formatting of that field to an empty string; add more verbose identifiers to each field by appending an ID in front of it or just adding paranthese around a field.
+
+
+## Alternatives
+
+* [colored_traceback](https://github.com/staticshock/colored-traceback.py) provides a way to color your tracebacks to make them more readable. It's a nice little tool but lacks actually re-formatting the traceback which is what the biggest problem is from my POV.
