@@ -21,23 +21,12 @@ It provides different configuration options for coloring and formatting.
 
 backtrace also allows to choose the formatting of each part of the traceback; show the traceback entries in reversed order, and more..
 
-Examples:
-
-When piping to backtrace:
-
-![Piping into backtrace](https://github.com/nir0s/backtrace/raw/master/img/piping.png)
-
-When using the API directly from Python:
-
-![Using python API](https://github.com/nir0s/backtrace/raw/master/img/api.png)
-
 NOTE: Didn't test this on Windows yet. Should work.. but don't know how well.
 
 
 ## Alternatives
 
 * [colored_traceback](https://github.com/staticshock/colored-traceback.py) provides a way to color your tracebacks to make them more readable. It's a nice little tool but lacks actually re-formatting the traceback which is what the biggest problem is from my POV.
-* Um.. your own implementation? There's really a reason for me doing this. I do have a life you know (well.. I try anyway).
 
 
 ## Installation
@@ -58,9 +47,6 @@ pip install https://github.com/nir0s/backtrace/archive/master.tar.gz
 ## Usage
 
 backtrace provides two methods for manipulating your tracebacks.
-
-* Piping to backtrace using its CLI
-* Using backtrace from within your code
 
 ### Piping
 
@@ -87,6 +73,9 @@ $ python my-traceback-generating-program.py 2>&1 | backtrace
 
 ```
 
+![Piping into backtrace](https://github.com/nir0s/backtrace/raw/master/img/piping.png)
+
+
 ### Inside your application
 
 ```python
@@ -108,6 +97,8 @@ backtrace.unhook()
 ...
 
 ```
+
+![Using python API](https://github.com/nir0s/backtrace/raw/master/img/api.png)
 
 You can pass the following flags to `hook` to change backtrace's behavior:
 
