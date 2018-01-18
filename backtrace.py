@@ -32,24 +32,21 @@ CONVERVATIVE_STYLES = {
 }
 
 
-def _flush(message):
-    sys.stderr.write(message + '\n')
-    sys.stderr.flush()
+#TODO: allow conservative again by allowing to provide a list of things to print: ['line', 'file', ...]
+# actually: replace the style-dict by a list:
+# module == file...
 
+# HEADER_STYLE = yellow("Traceback (Most recent call last):")
+# LINE_STYLE  = [ "["+(bright+red)("{line:>3}")+"]", "{file}", (bright+green)("{context}")+":", (bright+yellow)("{call}") ]
+# FOOTER_STYLE = (bright+red)("{exception}")
 
 class _Hook(object):
-    def __init__(self,
-                 entries,
-                 align=False,
-                 strip_path=False,
-                 conservative=False):
+    def __init__(self, entries, align=False, strip_path=False):
         self.entries = entries
         self.align = align
         self.strip = strip_path
-        self.conservative = conservative
 
-    def reverse(self):
-        self.entries = self.entries[::-1]
+    def reverse(self): self.entries = self.entries[::-1]
 
     def rebuild_entry(self, entry, styles):
         entry = list(entry)
@@ -64,8 +61,6 @@ class _Hook(object):
             styles['context'].format(entry[2]) + Style.RESET_ALL,
             styles['call'].format(entry[3]) + Style.RESET_ALL
         ]
-        if self.conservative:
-            new_entry[0], new_entry[1] = new_entry[1], new_entry[0]
 
         return new_entry
 
@@ -109,7 +104,6 @@ def hook(reverse=False,
          strip_path=False,
          enable_on_envvar_only=False,
          on_tty=False,
-         conservative=False,
          styles=None,
          tb=None,
          tpe=None,
@@ -142,14 +136,8 @@ def hook(reverse=False,
     if on_tty and not isatty():
         return
 
-    if conservative:
-        styles = CONVERVATIVE_STYLES
-        align = align or False
-    elif styles:
-        for k in STYLES.keys():
-            styles[k] = styles.get(k, STYLES[k])
-    else:
-        styles = STYLES
+    elif styles: styles.update(STYLES)
+    else: styles = STYLES
 
     # For Windows
     colorama.init(autoreset=True)
@@ -161,29 +149,26 @@ def hook(reverse=False,
             traceback_entries = traceback.extract_tb(tb)
         except AttributeError:
             traceback_entries = tb
-        parser = _Hook(traceback_entries, align, strip_path, conservative)
+        parser = _Hook(traceback_entries, align, strip_path)
 
         tpe = tpe if isinstance(tpe, str) else tpe.__name__
         tb_message = styles['backtrace'].format('Traceback ({0}):'.format(
             'Most recent call ' + ('first' if reverse else 'last')))
         err_message = styles['error'].format(tpe + ': ' + str(value))
 
-        if reverse:
-            parser.reverse()
+        if reverse: parser.reverse()
+
+        def _flush(message):
+            sys.stderr.write(message + '\n')
+            sys.stderr.flush()
 
         _flush(tb_message)
         backtrace = parser.generate_backtrace(styles)
         backtrace.insert(0 if reverse else len(backtrace), err_message)
-        for entry in backtrace:
-            _flush(entry)
+        for entry in backtrace: _flush(entry)
 
-    if tb:
-        backtrace_excepthook(tpe=tpe, value=value, tb=tb)
-    else:
-        sys.excepthook = backtrace_excepthook
-
-
-def unhook(): sys.excepthook = sys.__excepthook__
+    if tb: backtrace_excepthook(tpe=tpe, value=value, tb=tb)
+    else: return backtrace_excepthook
 
 
 def _extract_traceback(text):
@@ -251,9 +236,18 @@ def _extract_traceback(text):
     return traceback_entries, all_else
 
 
-def _stdin_hook(args):
-    output = sys.stdin.readlines()
+def main():
+    parser = argparse.ArgumentParser(description=__doc__,
+                                     formatter_class=argparse.RawTextHelpFormatter)
+    parser.add_argument('-r', '--reverse', action='store_true', 
+                        help='Reverse traceback entry order')
+    parser.add_argument('-a', '--align', action='store_true',
+                        help='Right-align the backtrace')
+    parser.add_argument('-s', '--strip-path', action='store_true',
+                        help='Strip the path to the module')
+    args = parser.parse_args()
 
+    output = sys.stdin.readlines()
     if TRACEBACK_IDENTIFIER not in output:
         sys.exit('No Traceback detected. Make sure you pipe stderr to '
                  'backtrace correctly.')
@@ -264,24 +258,8 @@ def _stdin_hook(args):
     hook(reverse=args.reverse,
          align=args.align,
          strip_path=args.strip_path,
-         conservative=args.conservative,
          tpe=tpe,
          value=value,
          tb=tb)
-
-
-def main():
-    parser = argparse.ArgumentParser(description=__doc__,
-                                     formatter_class=argparse.RawTextHelpFormatter)
-    parser.add_argument('-r', '--reverse', action='store_true', 
-                        help='Reverse traceback entry order')
-    parser.add_argument('-a', '--align', action='store_true',
-                        help='Right-align the backtrace')
-    parser.add_argument('-s', '--strip-path', action='store_true',
-                        help='Strip the path to the module')
-    parser.add_argument('-c', '--conservative', action='store_true',
-                        help='Activate conservative mode')
-    args = parser.parse_args()
-    _stdin_hook(args)
 
 if __name__=='__main__': main()

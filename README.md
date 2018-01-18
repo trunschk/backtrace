@@ -17,13 +17,7 @@ NOTE: Didn't test this on Windows yet. Should work.. but don't know how well.
 backtrace officially supports Linux and OSX on Python 2.7 and 3.4+. Python 2.6 will also probably work, but with no guarantees.
 
 ```shell
-pip install backtrace
-```
-
-For dev:
-
-```shell
-pip install https://github.com/nir0s/backtrace/archive/master.tar.gz
+pip install https://github.com/trunschk/backtrace/archive/master.tar.gz
 ```
 
 
@@ -56,32 +50,33 @@ $ python my-traceback-generating-program.py 2>&1 | backtrace
 
 ```
 
-![Piping into backtrace](https://github.com/nir0s/backtrace/raw/master/img/piping.png)
+![Piping into backtrace](https://github.com/trunschk/backtrace/raw/master/img/piping.png)
 
 
 ### Inside your application
 
 ```python
+import sys
 import backtrace
 
-backtrace.hook(
+sys.excepthook = backtrace.hook(
     reverse=False,
     align=False,
     strip_path=False,
     enable_on_envvar_only=False,
     on_tty=False,
-    conservative=False,
     styles={})
 
-# more code...
+...
 
 # if you wanna restore the default hook...
-backtrace.unhook()
+sys.excepthook = sys.__excepthook__
+
 ...
 
 ```
 
-![Using python API](https://github.com/nir0s/backtrace/raw/master/img/api.png)
+![Using python API](https://github.com/trunschk/backtrace/raw/master/img/api.png)
 
 You can pass the following flags to `hook` to change backtrace's behavior:
 
@@ -95,7 +90,6 @@ path. This is useful when you know you're running in the context of a single mod
 * If `on_tty` is True, backtrace will be activated only if you're running
 in a real terminal (i.e. not piped, redirected, etc..). This can help keep the original traceback when logging to files or piping to look for information.
 * `styles` is a dictionary containing the styling for each part of the rebuilt traceback. See below.
-* If `conservative` is true, a more conservative format will be provided for people who find the default backtrace style too new or intimidating. For example, no alignment will be done (unless `align` is explicitly passed), `styles` will be ignored, and potential unnecessary data will be retained. Try It! It's still eye-candy.
 
 #### Styles
 
