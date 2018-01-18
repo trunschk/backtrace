@@ -43,7 +43,6 @@ optional arguments:
   -r, --reverse       Reverse traceback entry order
   -a, --align         Right-align the backtrace
   -s, --strip-path    Strip the path to the module
-  -c, --conservative  Activate conservative mode
 
 $ python my-traceback-generating-program.py 2>&1 | backtrace
 ...
