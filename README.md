@@ -143,24 +143,3 @@ and the `{0}` format place holder is the actual value of the field.
 Sending a partial dictionary containing changes in only some parts of the traceback will have `backtrace` use the defaults for whatever wasn't specified.
 
 You can do all sorts of stuff like removing a certain field by setting the formatting of that field to an empty string; add more verbose identifiers to each field by appending an ID in front of it or just adding paranthese around a field.
-
-
-## Coloring
-
-Coloring is powered by [colorama](https://github.com/tartley/colorama).
-
-
-## Testing
-
-To see an example printout:
-
-```shell
-$ python test.py
-```
-
-```shell
-git clone git@github.com:nir0s/backtrace.git
-cd backtrace
-pip install tox
-tox
-```
