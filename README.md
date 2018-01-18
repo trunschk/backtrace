@@ -6,15 +6,8 @@ Work in progress.
 This is a fork of [nir0s/backtrace](https://github.com/nir0s/backtrace).
 Its aim is to slim down the original.
 
-
-[![Requirements Status](https://requires.io/github/nir0s/backtrace/requirements.svg?branch=master)](https://requires.io/github/trunschk/backtrace/requirements/?branch=master)
-[![Code Coverage](https://codecov.io/github/nir0s/backtrace/coverage.svg?branch=master)](https://codecov.io/github/trunschk/backtrace?branch=master)
-[![Code Quality](https://landscape.io/github/nir0s/backtrace/master/landscape.svg?style=flat)](https://landscape.io/github/trunschk/backtrace)
-
 backtrace manipulates Python tracebacks to make them more readable.
 It provides different configuration options for coloring and formatting.
-
-backtrace also allows to choose the formatting of each part of the traceback; show the traceback entries in reversed order, and more..
 
 NOTE: Didn't test this on Windows yet. Should work.. but don't know how well.
 
